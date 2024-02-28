@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 # Create your models here.
@@ -24,6 +24,22 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='город',
         **NULLABLE)
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_permissions',
+        blank=True,
+        verbose_name='Custom user permissions',
+        help_text='Specific permissions for this user.',
+    )
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_groups',
+        blank=True,
+        verbose_name='Custom user groups',
+        help_text='The groups this user belongs to.',
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
