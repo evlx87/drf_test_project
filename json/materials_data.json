@@ -91,16 +91,5 @@
       "image": "",
       "url_video": null
     }
-  },
-  {
-    "model": "materials.lesson",
-    "pk": 7,
-    "fields": {
-      "course": 1,
-      "title": "test1",
-      "description": "test text",
-      "image": "",
-      "url_video": null
-    }
   }
 ]
