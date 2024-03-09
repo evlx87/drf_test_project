@@ -74,8 +74,7 @@ class Payment(models.Model):
         default='card')
 
     def __str__(self):
-        return f'{
-            self.course if self.course else self.lesson} - {self.payment_date}'
+        return f'{self.course if self.course else self.lesson} - {self.payment_date}'
 
     class Meta:
         verbose_name = 'платеж'
