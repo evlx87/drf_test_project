@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 # Create your models here.
@@ -15,6 +16,10 @@ class Course(models.Model):
         **NULLABLE)
     description = models.TextField(
         verbose_name='описание')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        **NULLABLE)
 
     def __str__(self):
         return self.name
@@ -43,6 +48,10 @@ class Lesson(models.Model):
         Course,
         on_delete=models.CASCADE,
         related_name='курс')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        **NULLABLE)
 
     def __str__(self):
         return self.name

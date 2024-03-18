@@ -2,6 +2,7 @@ from rest_framework.generics import RetrieveAPIView, DestroyAPIView, ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from lms.models import Course, Lesson
+from lms.permissions import IsModerator
 from lms.serializers import CourseSerializer, LessonSerializer
 
 
@@ -14,6 +15,7 @@ class CourseViewSet(ModelViewSet):
 class LessonDetailView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsModerator]
 
 
 class LessonDestroyView(DestroyAPIView):
@@ -29,6 +31,7 @@ class LessonListView(ListAPIView):
 class LessonUpdateView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsModerator]
 
 
 class LessonCreateView(CreateAPIView):
