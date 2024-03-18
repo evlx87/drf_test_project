@@ -2,10 +2,16 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 from lms.models import Course, Lesson
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 NULLABLE = {'blank': True, 'null': True}
 PAYMENT_CHOICES = (('card', 'карта'), ('cash', 'наличные'),)
+
+
+class UserRoles(models.TextChoices):
+    MEMBER = 'member', _('member')
+    MODERATOR = 'moderator', _('moderator')
 
 
 class User(AbstractUser):
@@ -27,6 +33,11 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='город',
         **NULLABLE)
+    role = models.CharField(
+        max_length=20,
+        choices=UserRoles.choices,
+        default=UserRoles.MEMBER,
+        verbose_name='роль')
 
     user_permissions = models.ManyToManyField(
         'auth.Permission',
