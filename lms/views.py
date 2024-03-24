@@ -1,9 +1,12 @@
-from rest_framework.generics import RetrieveAPIView, DestroyAPIView, ListAPIView, UpdateAPIView, CreateAPIView
+from rest_framework.generics import RetrieveAPIView, DestroyAPIView, ListAPIView, UpdateAPIView, CreateAPIView, \
+    get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from lms.models import Course, Lesson
+from lms.models import Course, Lesson, Subscription
 from lms.permissions import IsModerator, IsOwner
-from lms.serializers import CourseSerializer, LessonSerializer
+from lms.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
 # Create your views here.
@@ -63,3 +66,31 @@ class LessonCreateView(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class SubscriptionCreateAPIView(CreateAPIView):
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        course_id = request.data.get('course')
+        course_item = get_object_or_404(Course, pk=course_id)
+        subscription_item = Subscription.objects.filter(
+            user=user, course=course_item).first()
+
+        if subscription_item:
+            subscription_item.delete()
+            message = 'подписка удалена'
+        else:
+            Subscription.objects.create(user=user, course=course_item)
+            message = 'подписка добавлена'
+
+        return Response({'message': message})
+
+
+class SubscriptionListAPIView(ListAPIView):
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+    permission_classes = [IsAuthenticated]
