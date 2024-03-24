@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from lms.models import Course, Lesson, Subscription
-from lms.validators import YoutubeUrlValidator
+from lms.validators import YoutubeUrlValidator, SubscriptionValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -31,6 +31,12 @@ class CourseSerializer(serializers.ModelSerializer):
         is_subscribed = Subscription.objects.filter(user=user, course=obj).exists()
         return is_subscribed
 
+    def create(self, validated_data):
+        new_course = Course.objects.create(**validated_data)
+        new_course.owner = self.context['request'].user
+        new_course.save()
+        return new_course
+
     class Meta:
         model = Course
         fields = '__all__'
@@ -40,3 +46,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+        validators = [
+            SubscriptionValidator(),
+        ]

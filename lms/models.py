@@ -73,12 +73,6 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         verbose_name='курс',
         **NULLABLE)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='subscriptions',
-        verbose_name='владелец',
-        **NULLABLE)
 
     def __str__(self):
         return f'{self.user} - {self.course}'
