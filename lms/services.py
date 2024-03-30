@@ -5,7 +5,7 @@ stripe.api_key = settings.STRIPE_API_KEY
 
 
 def create_course_payment(course, price):
-    product_stripe = stripe.Product.create(name=course.title)
+    product_stripe = stripe.Product.create(name=course)
 
     price_stripe = stripe.Price.create(
         currency="usd",
@@ -26,10 +26,3 @@ def create_course_payment(course, price):
     )
 
     return session_stripe
-
-
-course = 'test course 1'
-price = 3500
-
-result = create_course_payment(course, price)
-print(result)

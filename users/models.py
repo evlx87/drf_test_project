@@ -63,7 +63,8 @@ class Payment(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='пользователь')
+        verbose_name='пользователь',
+        **NULLABLE)
     payment_date = models.DateField(
         auto_now_add=True,
         verbose_name='дата оплаты')
@@ -77,7 +78,9 @@ class Payment(models.Model):
         on_delete=models.CASCADE,
         verbose_name='урок',
         **NULLABLE)
-    amount = models.PositiveIntegerField(verbose_name='стоимость')
+    amount = models.PositiveIntegerField(
+        verbose_name='стоимость',
+        **NULLABLE)
     payment_method = models.CharField(
         max_length=50,
         verbose_name='метод оплаты',
