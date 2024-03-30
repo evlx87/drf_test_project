@@ -11,7 +11,7 @@ def create_course_payment(course, price):
         currency="usd",
         unit_amount=price,
         recurring={"interval": "month"},
-        product_data={"name": product_stripe},
+        product=product_stripe.id,
     )
 
     session_stripe = stripe.checkout.Session.create(

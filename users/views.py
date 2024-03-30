@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from lms.models import Course
 from users.models import User, Payment
-from users.serializers import UserSerializer, PaymentSerializer, UserProfileSerializer
+from users.serializers import UserSerializer, PaymentSerializer, UserProfileSerializer, CreatePaymentSerializer
 
 
 # Create your views here.
@@ -34,7 +34,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 
 class PaymentCourseCreateAPIView(generics.CreateAPIView):
-    serializer_class = PaymentSerializer
+    serializer_class = CreatePaymentSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -43,5 +43,10 @@ class PaymentCourseCreateAPIView(generics.CreateAPIView):
         user = self.request.user
 
         if user.payment_set.filter(course=course).exists():
-            raise serializers.ValidationError('У вас уже есть оплаченное обучение')
+            raise serializers.ValidationError(
+                'У вас уже есть оплаченное обучение')
+
+        if course.price is None:
+            raise serializers.ValidationError('У курса нет цены')
+
         serializer.save(user=user, course=course, amount=course.price)

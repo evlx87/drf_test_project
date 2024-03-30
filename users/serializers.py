@@ -5,25 +5,37 @@ from users.models import User, Payment
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
     class Meta:
         model = User
-        fields = ['email']
+        fields = [
+            'email',
+            'phone',
+            'city',
+            'avatar',
+            'role',
+            'password']
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+
+class CreatePaymentSerializer(serializers.ModelSerializer):
     course_payment_url = serializers.SerializerMethodField(read_only=True)
 
     def get_course_payment_url(self, obj):
-        if obj.course:
-            if obj.course.price:
-                stripe_response = create_course_payment(
-                    course=obj.course.title,
-                    price=int(obj.amount * 100))
-                return stripe_response.url
-            else:
-                return 'У курса нет цены'
-        else:
-            return None
+        result = create_course_payment(
+            course=obj.course.title,
+            price=int(obj.course.price * 100))
+        return result.url
 
     class Meta:
         model = Payment
