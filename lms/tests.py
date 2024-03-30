@@ -1,8 +1,7 @@
 import os
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 import django
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 from django.urls import reverse
