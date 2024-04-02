@@ -1,6 +1,7 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
+from django.utils import timezone
 
 from lms.models import Course, Lesson
 from django.utils.translation import gettext_lazy as _
@@ -84,6 +85,10 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def update_last_login(self):
+        self.last_login = timezone.now()
+        self.save(update_fields=["last_login"])
 
 
 class Payment(models.Model):
