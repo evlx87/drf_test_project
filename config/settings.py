@@ -182,7 +182,7 @@ CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 CELERY_TIMEZONE = 'Europe/Moscow'
 
 # Флаг отслеживания выполнения задач
-# CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TRACK_STARTED = True
 
 # Максимальное время на выполнение задачи
 # CELERY_TASK_TIME_LIMIT = 30 * 60

@@ -55,6 +55,9 @@ class Lesson(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         **NULLABLE)
+    last_updated = models.DateField(
+        auto_now=True,
+        verbose_name='последнее обновление')
 
     def __str__(self):
         return self.name
