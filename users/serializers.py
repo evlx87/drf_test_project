@@ -1,24 +1,30 @@
 from rest_framework import serializers
 
-from users.models import User
+from users.models import User, Payment
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Сериализатор пользователя"""
+    class Meta:
+        model = User
+        fields = ['email']
 
-    date_joined = serializers.DateTimeField(format="%Y-%m-%d")
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = [
             'id',
+            'username',
             'email',
-            'first_name',
-            'last_name',
             'phone',
-            'avatar',
             'city',
-            'is_staff',
-            'is_active',
-            'date_joined'
-        ]
+            'avatar',
+            'payments']
