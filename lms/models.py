@@ -20,6 +20,9 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         **NULLABLE)
+    price = models.PositiveIntegerField(
+        verbose_name='стоимость',
+        **NULLABLE)
 
     def __str__(self):
         return self.name
