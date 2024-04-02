@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from lms.models import Course, Lesson
+from lms.models import Course, Lesson, Subscription
 
 
 # Register your models here.
@@ -12,3 +12,8 @@ class AdminCourse(admin.ModelAdmin):
 @admin.register(Lesson)
 class AdminLesson(admin.ModelAdmin):
     list_display = ('course', 'name', 'description', 'preview', 'video_url', 'owner',)
+
+
+@admin.register(Subscription)
+class AdminSubscription(admin.ModelAdmin):
+    list_display = ('user', 'course',)
