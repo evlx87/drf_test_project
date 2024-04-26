@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'users',
-    'lms',
     'django_filters',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'django_celery_beat',
+
+    'users',
+    'lms',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +138,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JSON_PATH = 'json'
 
+AUTH_USER_MODEL = 'users.User'
+
+ROOT_EMAIL = os.getenv('ROOT_EMAIL')
+ROOT_PASSWORD = os.getenv('ROOT_PASSWORD')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -143,11 +158,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 11,
+    'PAGE_SIZE': 50,
 }
 
 SIMPLE_JWT = {
@@ -156,3 +170,27 @@ SIMPLE_JWT = {
 }
 
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
+
+# Настройки для Celery
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# Максимальное время на выполнение задачи
+# CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Настройки для Celery, чтобы использовать периодические задачи
+CELERY_BEAT_SCHEDULE = {
+    'check_users_and_block_inactive': {
+        'task': 'users.tasks.check_users_and_block_inactive',  # Путь к задаче
+        'schedule': timedelta(minutes=10),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+}
